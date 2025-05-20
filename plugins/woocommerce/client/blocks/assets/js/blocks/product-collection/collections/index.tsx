@@ -15,6 +15,7 @@ import {
 import { CollectionName } from '../types';
 import blockJson from '../block.json';
 import bestSellers from './best-sellers';
+import byCategory from './by-category';
 import crossSells from './cross-sells';
 import featured from './featured';
 import handPicked from './hand-picked';
@@ -34,6 +35,7 @@ const collections: BlockVariation[] = [
 	bestSellers,
 	topRated,
 	handPicked,
+	byCategory,
 	related,
 	upsells,
 	crossSells,
