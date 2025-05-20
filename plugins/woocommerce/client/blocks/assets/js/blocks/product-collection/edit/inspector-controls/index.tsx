@@ -31,6 +31,7 @@ import {
 	ProductCollectionContentProps,
 	CoreFilterNames,
 	FilterName,
+	CoreCollectionNames,
 } from '../../types';
 import { setQueryAttribute, getDefaultSettings } from '../../utils';
 import UpgradeNotice from './upgrade-notice';
@@ -59,11 +60,20 @@ import RelatedByControl from './related-by-control';
 import ProductsPerPageControl from './products-per-page-control';
 import OffsetControl from './offset-control';
 import MaxPagesToShowControl from './max-pages-to-show-control';
+import CategoryControl, { CategoryControlField } from './category-control';
 
 const prepareShouldShowFilter =
-	( hideControls: FilterName[] ) => ( filter: FilterName ) => {
-		return ! hideControls.includes( filter );
+	(hideControls: FilterName[]) => (filter: FilterName) => {
+		console.log('Checking filter:', filter);
+		console.log('Hidden controls:', hideControls);
+
+		const shouldShow = !hideControls.includes(filter);
+
+		console.log(`Should show filter "${filter}":`, shouldShow);
+
+		return shouldShow;
 	};
+
 
 const ProductCollectionInspectorControls = (
 	props: ProductCollectionContentProps
@@ -120,6 +130,7 @@ const ProductCollectionInspectorControls = (
 	const showPriceRangeControl = shouldShowFilter(
 		CoreFilterNames.PRICE_RANGE
 	);
+	const showCategoryControl = shouldShowFilter( CoreFilterNames.CATEGORIES );
 
 	const setQueryAttributeBind = useMemo(
 		() => setQueryAttribute.bind( null, props ),
@@ -199,6 +210,9 @@ const ProductCollectionInspectorControls = (
 					} }
 					className="wc-block-editor-product-collection-inspector-toolspanel__filters"
 				>
+					{ showCategoryControl && (
+						<CategoryControl { ...queryControlProps } />
+					) }
 					{ showOnSaleControl && (
 						<OnSaleControl { ...queryControlProps } />
 					) }
@@ -325,7 +339,7 @@ const CollectionSpecificControls = (
 				 * Hand-Picked collection-specific controls.
 				 */
 				props.attributes.collection ===
-					'woocommerce/product-collection/hand-picked' && (
+					CoreCollectionNames.HAND_PICKED && (
 					<PanelBody>
 						<HandPickedProductsControlField
 							{ ...queryControlProps }
@@ -337,9 +351,19 @@ const CollectionSpecificControls = (
 				/**
 				 * "Related Products" collection-specific controls.
 				 */
-				props.attributes.collection ===
-					'woocommerce/product-collection/related' && (
+				props.attributes.collection === CoreCollectionNames.RELATED && (
 					<RelatedByControl { ...queryControlProps } />
+				)
+			}
+			{
+				/**
+				 * "Products by Category" collection-specific controls.
+				 */
+				props.attributes.collection ===
+					CoreCollectionNames.BY_CATEGORY && (
+					<PanelBody>
+						<CategoryControlField { ...queryControlProps } />
+					</PanelBody>
 				)
 			}
 		</InspectorControls>
