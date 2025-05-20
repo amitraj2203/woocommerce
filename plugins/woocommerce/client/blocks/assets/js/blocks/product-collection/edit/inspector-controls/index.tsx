@@ -63,17 +63,10 @@ import MaxPagesToShowControl from './max-pages-to-show-control';
 import CategoryControl, { CategoryControlField } from './category-control';
 
 const prepareShouldShowFilter =
-	(hideControls: FilterName[]) => (filter: FilterName) => {
-		console.log('Checking filter:', filter);
-		console.log('Hidden controls:', hideControls);
-
-		const shouldShow = !hideControls.includes(filter);
-
-		console.log(`Should show filter "${filter}":`, shouldShow);
-
+	( hideControls: FilterName[] ) => ( filter: FilterName ) => {
+		const shouldShow = ! hideControls.includes( filter );
 		return shouldShow;
 	};
-
 
 const ProductCollectionInspectorControls = (
 	props: ProductCollectionContentProps
