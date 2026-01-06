@@ -15,6 +15,8 @@ import {
 	__experimentalToggleGroupControl as ToggleGroupControl,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalToolsPanelItem as ToolsPanelItem,
 } from '@wordpress/components';
 
 export const getBlockControls = ( editMode, setAttributes, buttonTitle ) => (
@@ -37,15 +39,22 @@ export const getSharedReviewContentControls = ( attributes, setAttributes ) => {
 	const reviewRatingsEnabled = getSetting( 'reviewRatingsEnabled', true );
 	return (
 		<>
-			<ToggleControl
+			<ToolsPanelItem
+				hasValue={ () => attributes.showReviewRating !== true }
 				label={ __( 'Product rating', 'woocommerce' ) }
-				checked={ attributes.showReviewRating }
-				onChange={ () =>
-					setAttributes( {
-						showReviewRating: ! attributes.showReviewRating,
-					} )
-				}
-			/>
+				onDeselect={ () => setAttributes( { showReviewRating: true } ) }
+				isShownByDefault
+			>
+				<ToggleControl
+					label={ __( 'Product rating', 'woocommerce' ) }
+					checked={ attributes.showReviewRating }
+					onChange={ () =>
+						setAttributes( {
+							showReviewRating: ! attributes.showReviewRating,
+						} )
+					}
+				/>
+			</ToolsPanelItem>
 			{ attributes.showReviewRating && ! reviewRatingsEnabled && (
 				<Notice
 					className="wc-block-base-control-notice"
@@ -71,61 +80,100 @@ export const getSharedReviewContentControls = ( attributes, setAttributes ) => {
 					) }
 				</Notice>
 			) }
-			<ToggleControl
+			<ToolsPanelItem
+				hasValue={ () => attributes.showReviewerName !== true }
 				label={ __( 'Reviewer name', 'woocommerce' ) }
-				checked={ attributes.showReviewerName }
-				onChange={ () =>
-					setAttributes( {
-						showReviewerName: ! attributes.showReviewerName,
-					} )
-				}
-			/>
-			<ToggleControl
+				onDeselect={ () => setAttributes( { showReviewerName: true } ) }
+				isShownByDefault
+			>
+				<ToggleControl
+					label={ __( 'Reviewer name', 'woocommerce' ) }
+					checked={ attributes.showReviewerName }
+					onChange={ () =>
+						setAttributes( {
+							showReviewerName: ! attributes.showReviewerName,
+						} )
+					}
+				/>
+			</ToolsPanelItem>
+			<ToolsPanelItem
+				hasValue={ () => attributes.showReviewImage !== true }
 				label={ __( 'Image', 'woocommerce' ) }
-				checked={ attributes.showReviewImage }
-				onChange={ () =>
-					setAttributes( {
-						showReviewImage: ! attributes.showReviewImage,
-					} )
-				}
-			/>
-			<ToggleControl
+				onDeselect={ () => setAttributes( { showReviewImage: true } ) }
+				isShownByDefault
+			>
+				<ToggleControl
+					label={ __( 'Image', 'woocommerce' ) }
+					checked={ attributes.showReviewImage }
+					onChange={ () =>
+						setAttributes( {
+							showReviewImage: ! attributes.showReviewImage,
+						} )
+					}
+				/>
+			</ToolsPanelItem>
+			<ToolsPanelItem
+				hasValue={ () => attributes.showReviewDate !== true }
 				label={ __( 'Review date', 'woocommerce' ) }
-				checked={ attributes.showReviewDate }
-				onChange={ () =>
-					setAttributes( {
-						showReviewDate: ! attributes.showReviewDate,
-					} )
-				}
-			/>
-			<ToggleControl
+				onDeselect={ () => setAttributes( { showReviewDate: true } ) }
+				isShownByDefault
+			>
+				<ToggleControl
+					label={ __( 'Review date', 'woocommerce' ) }
+					checked={ attributes.showReviewDate }
+					onChange={ () =>
+						setAttributes( {
+							showReviewDate: ! attributes.showReviewDate,
+						} )
+					}
+				/>
+			</ToolsPanelItem>
+			<ToolsPanelItem
+				hasValue={ () => attributes.showReviewContent !== true }
 				label={ __( 'Review content', 'woocommerce' ) }
-				checked={ attributes.showReviewContent }
-				onChange={ () =>
-					setAttributes( {
-						showReviewContent: ! attributes.showReviewContent,
-					} )
+				onDeselect={ () =>
+					setAttributes( { showReviewContent: true } )
 				}
-			/>
+				isShownByDefault
+			>
+				<ToggleControl
+					label={ __( 'Review content', 'woocommerce' ) }
+					checked={ attributes.showReviewContent }
+					onChange={ () =>
+						setAttributes( {
+							showReviewContent: ! attributes.showReviewContent,
+						} )
+					}
+				/>
+			</ToolsPanelItem>
 			{ attributes.showReviewImage && (
 				<>
-					<ToggleGroupControl
+					<ToolsPanelItem
+						hasValue={ () => attributes.imageType !== 'reviewer' }
 						label={ __( 'Review image', 'woocommerce' ) }
-						isBlock
-						value={ attributes.imageType }
-						onChange={ ( value ) =>
-							setAttributes( { imageType: value } )
+						onDeselect={ () =>
+							setAttributes( { imageType: 'reviewer' } )
 						}
+						isShownByDefault
 					>
-						<ToggleGroupControlOption
-							value="reviewer"
-							label={ __( 'Reviewer photo', 'woocommerce' ) }
-						/>
-						<ToggleGroupControlOption
-							value="product"
-							label={ __( 'Product', 'woocommerce' ) }
-						/>
-					</ToggleGroupControl>
+						<ToggleGroupControl
+							label={ __( 'Review image', 'woocommerce' ) }
+							isBlock
+							value={ attributes.imageType }
+							onChange={ ( value ) =>
+								setAttributes( { imageType: value } )
+							}
+						>
+							<ToggleGroupControlOption
+								value="reviewer"
+								label={ __( 'Reviewer photo', 'woocommerce' ) }
+							/>
+							<ToggleGroupControlOption
+								value="product"
+								label={ __( 'Product', 'woocommerce' ) }
+							/>
+						</ToggleGroupControl>
+					</ToolsPanelItem>
 					{ attributes.imageType === 'reviewer' && ! showAvatars && (
 						<Notice
 							className="wc-block-base-control-notice"
@@ -163,49 +211,90 @@ export const getSharedReviewListControls = ( attributes, setAttributes ) => {
 
 	return (
 		<>
-			<ToggleControl
+			<ToolsPanelItem
+				hasValue={ () => attributes.showOrderby !== true }
 				label={ __( 'Order by', 'woocommerce' ) }
-				checked={ attributes.showOrderby }
-				onChange={ () =>
-					setAttributes( { showOrderby: ! attributes.showOrderby } )
-				}
-			/>
-			<SelectControl
+				onDeselect={ () => setAttributes( { showOrderby: true } ) }
+				isShownByDefault
+			>
+				<ToggleControl
+					label={ __( 'Order by', 'woocommerce' ) }
+					checked={ attributes.showOrderby }
+					onChange={ () =>
+						setAttributes( {
+							showOrderby: ! attributes.showOrderby,
+						} )
+					}
+				/>
+			</ToolsPanelItem>
+			<ToolsPanelItem
+				hasValue={ () => attributes.orderby !== 'most-recent' }
 				label={ __( 'Order Product Reviews by', 'woocommerce' ) }
-				value={ attributes.orderby }
-				options={ [
-					{ label: 'Most recent', value: 'most-recent' },
-					{ label: 'Highest Rating', value: 'highest-rating' },
-					{ label: 'Lowest Rating', value: 'lowest-rating' },
-				] }
-				onChange={ ( orderby ) => setAttributes( { orderby } ) }
-			/>
-			<RangeControl
+				onDeselect={ () => setAttributes( { orderby: 'most-recent' } ) }
+				isShownByDefault
+			>
+				<SelectControl
+					label={ __( 'Order Product Reviews by', 'woocommerce' ) }
+					value={ attributes.orderby }
+					options={ [
+						{ label: 'Most recent', value: 'most-recent' },
+						{ label: 'Highest Rating', value: 'highest-rating' },
+						{ label: 'Lowest Rating', value: 'lowest-rating' },
+					] }
+					onChange={ ( orderby ) => setAttributes( { orderby } ) }
+				/>
+			</ToolsPanelItem>
+			<ToolsPanelItem
+				hasValue={ () => attributes.reviewsOnPageLoad !== 10 }
 				label={ __( 'Starting Number of Reviews', 'woocommerce' ) }
-				value={ attributes.reviewsOnPageLoad }
-				onChange={ ( reviewsOnPageLoad ) =>
-					setAttributes( { reviewsOnPageLoad } )
-				}
-				max={ maxPerPage }
-				min={ minPerPage }
-			/>
-			<ToggleControl
-				label={ __( 'Load more', 'woocommerce' ) }
-				checked={ attributes.showLoadMore }
-				onChange={ () =>
-					setAttributes( { showLoadMore: ! attributes.showLoadMore } )
-				}
-			/>
-			{ attributes.showLoadMore && (
+				onDeselect={ () => setAttributes( { reviewsOnPageLoad: 10 } ) }
+				isShownByDefault
+			>
 				<RangeControl
-					label={ __( 'Load More Reviews', 'woocommerce' ) }
-					value={ attributes.reviewsOnLoadMore }
-					onChange={ ( reviewsOnLoadMore ) =>
-						setAttributes( { reviewsOnLoadMore } )
+					label={ __( 'Starting Number of Reviews', 'woocommerce' ) }
+					value={ attributes.reviewsOnPageLoad }
+					onChange={ ( reviewsOnPageLoad ) =>
+						setAttributes( { reviewsOnPageLoad } )
 					}
 					max={ maxPerPage }
 					min={ minPerPage }
 				/>
+			</ToolsPanelItem>
+			<ToolsPanelItem
+				hasValue={ () => attributes.showLoadMore !== true }
+				label={ __( 'Load more', 'woocommerce' ) }
+				onDeselect={ () => setAttributes( { showLoadMore: true } ) }
+				isShownByDefault
+			>
+				<ToggleControl
+					label={ __( 'Load more', 'woocommerce' ) }
+					checked={ attributes.showLoadMore }
+					onChange={ () =>
+						setAttributes( {
+							showLoadMore: ! attributes.showLoadMore,
+						} )
+					}
+				/>
+			</ToolsPanelItem>
+			{ attributes.showLoadMore && (
+				<ToolsPanelItem
+					hasValue={ () => attributes.reviewsOnLoadMore !== 10 }
+					label={ __( 'Load More Reviews', 'woocommerce' ) }
+					onDeselect={ () =>
+						setAttributes( { reviewsOnLoadMore: 10 } )
+					}
+					isShownByDefault
+				>
+					<RangeControl
+						label={ __( 'Load More Reviews', 'woocommerce' ) }
+						value={ attributes.reviewsOnLoadMore }
+						onChange={ ( reviewsOnLoadMore ) =>
+							setAttributes( { reviewsOnLoadMore } )
+						}
+						max={ maxPerPage }
+						min={ minPerPage }
+					/>
+				</ToolsPanelItem>
 			) }
 		</>
 	);
