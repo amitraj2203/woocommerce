@@ -1,13 +1,18 @@
+/**
+ * Internal dependencies
+ */
+import { SharedReviewAttributes } from '../types';
+
+interface ReviewsByCategoryAttributes extends SharedReviewAttributes {
+	editMode: boolean;
+	categoryIds: number[];
+	showProductName: boolean;
+}
+
 export interface ReviewsByCategoryEditorProps {
-	attributes: {
-		editMode: boolean;
-		categoryIds: number[];
-		showProductName: boolean;
-	};
-	setAttributes: ( attributes: {
-		editMode?: boolean;
-		categoryIds?: number[];
-		showProductName?: boolean;
-	} ) => void;
+	attributes: ReviewsByCategoryAttributes;
+	setAttributes: (
+		attributes: Partial< ReviewsByCategoryAttributes >
+	) => void;
 	debouncedSpeak: ( message: string ) => void;
 }

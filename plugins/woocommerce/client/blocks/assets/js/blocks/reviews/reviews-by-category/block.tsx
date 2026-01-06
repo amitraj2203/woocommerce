@@ -5,10 +5,13 @@ import { __ } from '@wordpress/i18n';
 import { InspectorControls } from '@wordpress/block-editor';
 import {
 	Button,
-	PanelBody,
 	Placeholder,
 	ToggleControl,
 	withSpokenMessages,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalToolsPanel as ToolsPanel,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalToolsPanelItem as ToolsPanelItem,
 } from '@wordpress/components';
 import ProductCategoryControl from '@woocommerce/editor-components/product-category-control';
 import { Icon, commentContent } from '@wordpress/icons';
@@ -24,6 +27,22 @@ import {
 	getSharedReviewListControls,
 } from '../edit-utils.js';
 import type { ReviewsByCategoryEditorProps } from './types';
+
+const DEFAULT_ATTRIBUTES = {
+	categoryIds: [],
+	showProductName: true,
+	showReviewRating: true,
+	showReviewerName: true,
+	showReviewImage: true,
+	showReviewDate: true,
+	showReviewContent: true,
+	imageType: 'reviewer',
+	showOrderby: true,
+	orderby: 'most-recent',
+	reviewsOnPageLoad: 10,
+	showLoadMore: true,
+	reviewsOnLoadMore: 10,
+};
 
 /**
  * Component to handle edit mode of "Reviews by Category".
@@ -43,38 +62,101 @@ const ReviewsByCategoryEditor = ( {
 	const getInspectorControls = () => {
 		return (
 			<InspectorControls key="inspector">
-				<PanelBody
-					title={ __( 'Category', 'woocommerce' ) }
-					initialOpen={ false }
+				<ToolsPanel
+					label={ __( 'Category', 'woocommerce' ) }
+					resetAll={ () =>
+						setAttributes( {
+							categoryIds: DEFAULT_ATTRIBUTES.categoryIds,
+						} )
+					}
 				>
-					<ProductCategoryControl
-						selected={ attributes.categoryIds }
-						onChange={ ( value = [] ) => {
-							const ids = value.map( ( { id } ) => id );
-							setAttributes( { categoryIds: ids } );
-						} }
-						isCompact={ true }
-						showReviewCount={ true }
-					/>
-				</PanelBody>
-				<PanelBody title={ __( 'Content', 'woocommerce' ) }>
-					<ToggleControl
-						label={ __( 'Product name', 'woocommerce' ) }
-						checked={ attributes.showProductName }
-						onChange={ () =>
+					<ToolsPanelItem
+						hasValue={ () =>
+							JSON.stringify( attributes.categoryIds ) !==
+							JSON.stringify( DEFAULT_ATTRIBUTES.categoryIds )
+						}
+						label={ __( 'Categories', 'woocommerce' ) }
+						onDeselect={ () =>
 							setAttributes( {
-								showProductName: ! attributes.showProductName,
+								categoryIds: DEFAULT_ATTRIBUTES.categoryIds,
 							} )
 						}
-					/>
+						isShownByDefault
+					>
+						<ProductCategoryControl
+							selected={ attributes.categoryIds }
+							onChange={ ( value = [] ) => {
+								const ids = value.map( ( { id } ) => id );
+								setAttributes( { categoryIds: ids } );
+							} }
+							isCompact={ true }
+							showReviewCount={ true }
+						/>
+					</ToolsPanelItem>
+				</ToolsPanel>
+				<ToolsPanel
+					label={ __( 'Content', 'woocommerce' ) }
+					resetAll={ () =>
+						setAttributes( {
+							showProductName: DEFAULT_ATTRIBUTES.showProductName,
+							showReviewRating:
+								DEFAULT_ATTRIBUTES.showReviewRating,
+							showReviewerName:
+								DEFAULT_ATTRIBUTES.showReviewerName,
+							showReviewImage: DEFAULT_ATTRIBUTES.showReviewImage,
+							showReviewDate: DEFAULT_ATTRIBUTES.showReviewDate,
+							showReviewContent:
+								DEFAULT_ATTRIBUTES.showReviewContent,
+							imageType: DEFAULT_ATTRIBUTES.imageType,
+						} )
+					}
+				>
+					<ToolsPanelItem
+						label={ __( 'Product name', 'woocommerce' ) }
+						hasValue={ () =>
+							attributes.showProductName !==
+							DEFAULT_ATTRIBUTES.showProductName
+						}
+						onDeselect={ () =>
+							setAttributes( {
+								showProductName:
+									DEFAULT_ATTRIBUTES.showProductName,
+							} )
+						}
+						isShownByDefault
+					>
+						<ToggleControl
+							label={ __( 'Product name', 'woocommerce' ) }
+							checked={ attributes.showProductName }
+							onChange={ () =>
+								setAttributes( {
+									showProductName:
+										! attributes.showProductName,
+								} )
+							}
+						/>
+					</ToolsPanelItem>
 					{ getSharedReviewContentControls(
 						attributes,
 						setAttributes
 					) }
-				</PanelBody>
-				<PanelBody title={ __( 'List Settings', 'woocommerce' ) }>
+				</ToolsPanel>
+				<ToolsPanel
+					label={ __( 'List Settings', 'woocommerce' ) }
+					resetAll={ () =>
+						setAttributes( {
+							showOrderby: DEFAULT_ATTRIBUTES.showOrderby,
+							orderby: DEFAULT_ATTRIBUTES.orderby,
+							reviewsOnPageLoad:
+								DEFAULT_ATTRIBUTES.reviewsOnPageLoad,
+							showLoadMore: DEFAULT_ATTRIBUTES.showLoadMore,
+							reviewsOnLoadMore:
+								DEFAULT_ATTRIBUTES.reviewsOnLoadMore,
+						} )
+					}
+				>
 					{ getSharedReviewListControls( attributes, setAttributes ) }
-				</PanelBody>
+				</ToolsPanel>
 			</InspectorControls>
 		);
 	};
