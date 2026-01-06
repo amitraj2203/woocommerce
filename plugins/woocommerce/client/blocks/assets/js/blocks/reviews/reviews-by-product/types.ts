@@ -3,7 +3,12 @@
  */
 import { BlockEditProps } from '@wordpress/blocks';
 
-interface ReviewByProductAttributes {
+/**
+ * Internal dependencies
+ */
+import { SharedReviewAttributes } from '../types';
+
+interface ReviewByProductAttributes extends SharedReviewAttributes {
 	editMode: boolean;
 	productId: number;
 }
