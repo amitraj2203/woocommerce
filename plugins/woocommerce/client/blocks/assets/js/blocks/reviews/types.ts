@@ -13,6 +13,23 @@ export interface PreviewReviews {
 	verified: boolean;
 }
 
+/**
+ * Shared review attributes used across all review blocks
+ */
+export interface SharedReviewAttributes {
+	showReviewRating: boolean;
+	showReviewerName: boolean;
+	showReviewImage: boolean;
+	showReviewDate: boolean;
+	showReviewContent: boolean;
+	imageType: string;
+	showOrderby: boolean;
+	orderby: string;
+	reviewsOnPageLoad: number;
+	showLoadMore: boolean;
+	reviewsOnLoadMore: number;
+}
+
 export interface Attributes {
 	categoryIds?: number[];
 	editMode?: boolean;
