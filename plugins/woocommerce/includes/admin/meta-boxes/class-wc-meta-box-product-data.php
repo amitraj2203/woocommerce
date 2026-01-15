@@ -203,9 +203,16 @@ class WC_Meta_Box_Product_Data {
 
 			for ( $i = 0; $i < $file_url_size; $i++ ) {
 				if ( ! empty( $file_urls[ $i ] ) ) {
+					$file_url = wp_unslash( trim( $file_urls[ $i ] ) );
+
+					// Automatically prepend https:// if the URL doesn't have a protocol.
+					if ( ! preg_match( '/^[a-z][a-z0-9+.-]*:/i', $file_url ) ) {
+						$file_url = 'https://' . $file_url;
+					}
+
 					$downloads[] = array(
 						'name'        => wc_clean( $file_names[ $i ] ),
-						'file'        => wp_unslash( trim( $file_urls[ $i ] ) ),
+						'file'        => $file_url,
 						'download_id' => wc_clean( $file_hashes[ $i ] ),
 					);
 				}
